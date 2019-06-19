@@ -2,16 +2,10 @@
 
 using namespace std;
 
+//fonction renvoyant dans un interval compris entre 0 et 1
 double sigmoid(double a)
 {
-     double exp_value;
-     double return_value;
-
-     /*** Exponential calculation ***/
-     exp_value = exp(-a);
-
-     /*** Final sigmoid value ***/
-     return_value = 1 / (1 + exp_value);
-
-     return return_value;
+     return 1.0/(1.0+pow(10,-x));
 }
+
+

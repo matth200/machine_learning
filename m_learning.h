@@ -1,8 +1,10 @@
 #ifndef LEARNING_DEFINE
 #define LEARNING_DEFINE
-
+ 
 #include <cmath>
 #include <vector>
+#include <time.h>
+
 
 double sigmoid(double a);
 
