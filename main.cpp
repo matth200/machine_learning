@@ -1,20 +1,24 @@
 #include <iostream>
 #include <fstream>
 
+#include <cstdlib>
+#include <time.h>
+
 #include <string.h>
 #include "m_learning.h"
 
 using namespace std;
 int main(int argc, char *argv[])
 {
+	srand(time(NULL));
 	cout << "lecture" << endl;
 	char data[786];
 	
 	//lecture de l'image dans un tableau en binaire
-	ifstream images-train("train-images.idx3-ubyte",ios::binary);
-	images-train.seekg(16,ios:beg);
-	memset(&data,0,786);
-	images-train.read(&data,786);
+	ifstream images_train("train-images.idx3-ubyte",ios::binary);
+	images_train.seekg(16,ios::beg);
+	memset(data,0,786);
+	images_train.read(data,786);
 	
 	//lecture du chiffre
 	int numberCorrect = -1;

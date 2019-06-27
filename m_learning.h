@@ -7,6 +7,8 @@
 #include <time.h>
 #include <cstdlib>
 
+#include <iostream>
+
 double sigmoid(double a);
  
 class Neuron
@@ -16,7 +18,7 @@ public:
 	void set_value(double v);
 	double get_value() const;
 	void set_weight(int i, double weight);
-	double get_weight(int i);
+	double get_weight(int i) const;
 	double get_bias() const;
 protected:
 	double value;
@@ -32,7 +34,7 @@ public:
 	bool is_end() const;
 	int get_number_neuron() const;
 	Neuron* get_neuron(int index);
-	void backPropagation();
+	void backpropagation();
 protected:
 	std::vector<Neuron> neurons;
 	NetworkNeuron *beforeNetwork, *afterNetwork;
@@ -44,10 +46,10 @@ public:
 	MachineLearning(int sizeInput);
 	void setInput(char *data);
        	void calcul();	
-	double getOutput(int index);
+	double getOutput(int index); 
 	void addColumn(int numberNeuron);
 	int getNumberColumn() const; 
-	void train(, NetworkNeuron& const result);
+	void train(NetworkNeuron const& result);
 protected:
 	std::vector<NetworkNeuron> Lines;
 };
