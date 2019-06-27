@@ -17,7 +17,7 @@ public:
 	double get_value() const;
 	void set_weight(int i, double weight);
 	double get_weight(int i);
-
+	double get_bias() const;
 protected:
 	double value;
 	double b;
@@ -30,6 +30,7 @@ public:
 	NetworkNeuron(int size, NetworkNeuron *before);
 	void set_after(NetworkNeuron *after);
 	bool is_end() const;
+	int get_number_neuron() const;
 	Neuron* get_neuron(int index);
 	void backPropagation();
 protected:
@@ -41,14 +42,14 @@ class MachineLearning
 {
 public:
 	MachineLearning(int sizeInput);
-	bool setInput(int index, double value);
+	void setInput(char *data);
+       	void calcul();	
 	double getOutput(int index);
 	void addColumn(int numberNeuron);
-	int getNumberColumn() const;
-	void train(const char* filename, NetworkNeuron& const result);
+	int getNumberColumn() const; 
+	void train(, NetworkNeuron& const result);
 protected:
 	std::vector<NetworkNeuron> Lines;
-	std::vector<double> inputs;
 };
 
 #endif

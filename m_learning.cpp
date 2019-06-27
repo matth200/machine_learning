@@ -12,14 +12,22 @@ double sigmoid(double a)
 
 Neuron::Neuron(int size, bool isRandom)
 {
+	//initialisation des valeurs
 	value = 0;
-	w.resize(size);
-	for(int i(0);w.size();i++)
+	b = 0;
+	w.resize(size,0);
+
+	//si aléatoire
+	if(isRandom)
 	{
-		//entre -5 et 5
-		w[i] = rand()%1000/100.0-5.0;
-	}
-}	
+		for(int i(0);w.size();i++)
+		{
+			//entre -5 et 5
+			w[i] = rand()%1000/100.0-5.0;
+		}
+		b = rand%4000/100.0-20.0;
+	}	
+}
 
 double Neuron::get_value()
 {
@@ -43,10 +51,14 @@ double Neuron::get_weight(int i)
 	return w[i]; 
 }
 
+double Neuron::get_bias()
+{
+	return b;
+}
 
 NetworkNeuron::NetworkNeuron(int size, NetworkNeuron* before)
 {
-	neurons.resize(size);
+	neurons.resize(size,Neuron((before!=0)?before->get_number_neuron():0,1);
 	beforeNetwork = before;
 	afterNetwork = 0;
 }
@@ -76,10 +88,34 @@ MachineLearning::MachineLearning(int sizeInput)
 	Lines.push_back(NetworkNeuron(sizeInput,0));
 }
 
-bool MachineLearning::setInput(int index, double value)
+void MachineLearning::setInput(char *data)
 {
 	if(index>=0 && value>=0 && value<=1)
-		Lines[0].get_neuron(index)->set_value(value);
+	{
+		double value = 0;
+		for(int i(0);i<786;i++)
+		{
+			value = (*((unsigned char*)(data+i)))/255.0;
+			Lines[0].get_neuron(i)->set_value(value);
+		}
+	}
+}
+
+void MachineLearning::calcul()
+{
+	double a;
+	for(int l(0);l<Lines.size()-1;l++)
+	{
+		for(int j(0);j<Lines[l+1].get_number_neuron();j++)
+		{
+			a = 0;
+			for(int i(0);i<Lines[l].get_number_neuron();i++)
+			{
+				a+=Lines[l].get_neuron(i)->get_value()*Lines[l+1].get_neuron(j)->get_weight(i);
+			}
+			Lines[l+1].get_neuron(j)->set_value(sigmoid(a+Lines[l+1].get_neuron(j)->get_bias()));
+		}
+	}
 }
 
 double MachineLearning::getOutput(int index)
@@ -97,3 +133,9 @@ int MachineLearning::getNumberColumn()
 {
 	return Lines.size();
 }
+
+void MachineLearning::train(unsigned char* example, NetworkNeuron& const result)
+{
+	
+}
+
