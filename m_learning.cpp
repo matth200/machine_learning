@@ -13,12 +13,12 @@ Neuron::Neuron(int size, bool isRandom)
 	//initialisation des valeurs
 	value = 0;
 	b = 0;
-	w.resize(size,0);
- 	
+	w.resize(size);
+
 	//si aléatoire
 	if(isRandom)
 	{
-		for(int i(0);w.size();i++)
+		for(int i(0);i<size;i++)
 		{
 			//entre -5 et 5
 			w[i] = rand()%1000/100.0-5.0;
@@ -71,6 +71,11 @@ bool NetworkNeuron::is_end() const
 	return afterNetwork==0;
 }
 
+NetworkNeuron* NetworkNeuron::getme()
+{
+	return this;
+}
+
 int NetworkNeuron::get_number_neuron() const
 {
 	return neurons.size();
@@ -78,7 +83,7 @@ int NetworkNeuron::get_number_neuron() const
 
 Neuron* NetworkNeuron::get_neuron(int index)
 {
-	return &neurons[index];	
+	return &(neurons[index]);	
 }
 
 void NetworkNeuron::backpropagation()
@@ -109,11 +114,14 @@ void MachineLearning::calcul()
 		for(int j(0);j<Lines[l+1].get_number_neuron();j++)
 		{
 			a = 0;
+			//cout << "début" << endl;
 			for(int i(0);i<Lines[l].get_number_neuron();i++)
 			{
 				a+=Lines[l].get_neuron(i)->get_value()*Lines[l+1].get_neuron(j)->get_weight(i);
+				//cout << Lines[l+1].get_neuron(j)->get_weight(i) << endl;
 			}
 			Lines[l+1].get_neuron(j)->set_value(sigmoid(a+Lines[l+1].get_neuron(j)->get_bias()));
+			//cout << "fin résultat a l:" << l+1 << " j:" << j << " valeur:" << Lines[l+1].get_neuron(j)->get_value() << endl;
 		}
 	}
 }
@@ -125,8 +133,9 @@ double MachineLearning::getOutput(int index)
 
 void MachineLearning::addColumn(int numberNeuron)
 {
-	Lines.push_back(NetworkNeuron(numberNeuron,&(Lines[Lines.size()-1])));
-	Lines[Lines.size()-2].set_after(&(Lines[Lines.size()-1]));
+	//Lines[Lines.size()-1].get_number_neuron();
+	Lines.push_back(NetworkNeuron(numberNeuron,Lines[Lines.size()-1].getme()));
+	Lines[Lines.size()-2].set_after(Lines[Lines.size()-1].getme());
 }
 
 int MachineLearning::getNumberColumn() const

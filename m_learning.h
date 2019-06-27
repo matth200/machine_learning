@@ -4,9 +4,9 @@
 #include <cmath>
 #include <vector>
 
-#include <time.h>
 #include <cstdlib>
 
+#include <ctime>
 #include <iostream>
 
 double sigmoid(double a);
@@ -32,6 +32,7 @@ public:
 	NetworkNeuron(int size, NetworkNeuron *before);
 	void set_after(NetworkNeuron *after);
 	bool is_end() const;
+	NetworkNeuron* getme();
 	int get_number_neuron() const;
 	Neuron* get_neuron(int index);
 	void backpropagation();
