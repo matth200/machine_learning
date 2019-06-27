@@ -19,6 +19,7 @@ public:
 	double get_value() const;
 	void set_weight(int i, double weight);
 	double get_weight(int i) const;
+	void set_bias(double bias);
 	double get_bias() const;
 	int numberConnection() const;
 protected:
@@ -53,6 +54,7 @@ public:
         int numberNeuronIn(int i);	
 	void addColumn(int numberNeuron);
 	int getNumberColumn() const; 
+	double getPrecision(NetworkNeuron& result);
 	void train(NetworkNeuron const& result);
 protected:
 	std::vector<NetworkNeuron> Lines;

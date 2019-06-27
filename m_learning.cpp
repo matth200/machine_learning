@@ -14,17 +14,6 @@ Neuron::Neuron(int size, bool isRandom)
 	value = 0;
 	b = 0;
 	w.resize(size);
-
-	//si aléatoire
-	if(isRandom)
-	{
-		for(int i(0);i<size;i++)
-		{
-			//entre -5 et 5
-			w[i] = rand()%1000/100.0-5.0;
-		}
-		b = rand()%4000/100.0-20.0;
-	}	
 }
 
 double Neuron::get_value() const
@@ -47,6 +36,11 @@ void Neuron::set_weight(int i, double weight)
 double Neuron::get_weight(int i) const
 { 
 	return w[i]; 
+}
+
+void Neuron::set_bias(double bias)
+{
+	b = bias;
 }
 
 double Neuron::get_bias() const
@@ -122,6 +116,7 @@ void MachineLearning::setWeightRandom()
 			{
 				Lines[l+1].get_neuron(j)->set_weight(i,rand()%1000/100.0-5.0);  
 			}
+			Lines[l+1].get_neuron(j)->set_bias(rand()%4000/100.0-20.0);
 		}
 	}
 }
@@ -165,6 +160,16 @@ int MachineLearning::numberNeuronIn(int i)
 int MachineLearning::getNumberColumn() const
 {
 	return Lines.size();
+}
+
+double MachineLearning::getPrecision(NetworkNeuron& result)
+{
+	double diff = 0;
+	for(int i(0);i<Lines[Lines.size()-1].get_number_neuron();i++)
+	{
+		diff+=pow(getOutput(i)-result.get_neuron(i)->get_value(),2);
+	}
+	return diff;
 }
 
 void MachineLearning::train(NetworkNeuron const& result)

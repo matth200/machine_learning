@@ -45,6 +45,9 @@ int main(int argc, char *argv[])
 	cout << "calcul(x)" << endl;
 	machine.calcul();
 	
+
+	NetworkNeuron resultats(10,0);
+	resultats.get_neuron(numberCorrect)->set_value(1);
 	cout << "résultat :" << endl;
 	for(int i(0);i<machine.numberNeuronIn(machine.getNumberColumn()-1);i++)
 	{
@@ -53,5 +56,27 @@ int main(int argc, char *argv[])
 			cout << "<<<<<<<<<<<<";
 		cout << endl;
 	}
+	cout << "précision = " << machine.getPrecision(resultats) << endl;
+
+	//train
+	for(int i(0);i<10000;i++)
+	{
+		images_train.seekg(16+i*784,ios::beg);
+		memset(data,0,784);
+		images_train.read(data,784);
+	
+		int numberC = -1;
+		unsigned char n;
+		file.seekg(8+i,ios::beg);
+		file.read((char*)&n,1);
+		numberC =  int(n);
+
+		NetworkNeuron resultats(10,0);
+		resultats.get_neuron(numberC)->set_value(1);
+		
+		machine.setInput(data);
+		machine.train(resultats);
+	}
+
 	return 0;
 }
