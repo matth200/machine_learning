@@ -11,15 +11,14 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	cout << "initialisation" << endl;
-	char data[786];
-	srand(time(NULL));
+	char data[784];
 
 	cout << "lecture image dans le fichier" << endl;	
 	//lecture de l'image dans un tableau en binaire
 	ifstream images_train("train-images.idx3-ubyte",ios::binary);
 	images_train.seekg(16,ios::beg);
-	memset(data,0,786);
-	images_train.read(data,786);
+	memset(data,0,784);
+	images_train.read(data,784);
 	
 	cout << "lecture chiffre dans le fichier" << endl;
 	//lecture du chiffre
@@ -42,11 +41,12 @@ int main(int argc, char *argv[])
 	cout << "données image --->> dans la structure" << endl;
 	//on rentre les données
 	machine.setInput(data);
+	machine.setWeightRandom();
 	cout << "calcul(x)" << endl;
 	machine.calcul();
 	
 	cout << "résultat :" << endl;
-	for(int i(0);i<10;i++)
+	for(int i(0);i<machine.numberNeuronIn(machine.getNumberColumn()-1);i++)
 	{
 		cout << i << " --> " << machine.getOutput(i);
 		if(i==numberCorrect)

@@ -20,6 +20,7 @@ public:
 	void set_weight(int i, double weight);
 	double get_weight(int i) const;
 	double get_bias() const;
+	int numberConnection() const;
 protected:
 	double value;
 	double b;
@@ -46,8 +47,10 @@ class MachineLearning
 public:
 	MachineLearning(int sizeInput);
 	void setInput(char *data);
+	void setWeightRandom();
        	void calcul();	
-	double getOutput(int index); 
+	double getOutput(int index);
+        int numberNeuronIn(int i);	
 	void addColumn(int numberNeuron);
 	int getNumberColumn() const; 
 	void train(NetworkNeuron const& result);

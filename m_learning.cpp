@@ -54,6 +54,11 @@ double Neuron::get_bias() const
 	return b;
 }
 
+int Neuron::numberConnection() const
+{
+ 	return w.size();
+}
+
 NetworkNeuron::NetworkNeuron(int size, NetworkNeuron* before)
 {
 	neurons.resize(size,Neuron((before!=0)?before->get_number_neuron():0,1));
@@ -106,22 +111,36 @@ void MachineLearning::setInput(char *data)
 	}
 }
 
-void MachineLearning::calcul()
+void MachineLearning::setWeightRandom()
 {
-	double a;
+	srand(time(NULL));
 	for(int l(0);l<Lines.size()-1;l++)
 	{
 		for(int j(0);j<Lines[l+1].get_number_neuron();j++)
 		{
+			for(int i(0);i<Lines[l+1].get_neuron(j)->numberConnection();i++)
+			{
+				Lines[l+1].get_neuron(j)->set_weight(i,rand()%1000/100.0-5.0);  
+			}
+		}
+	}
+}
+
+void MachineLearning::calcul()
+{	
+	double a = 0;
+	for(int l(0);l<Lines.size()-1;l++)
+	{
+		//cout << "l:" << l+1 << "jMAX:" << Lines[l+1].get_number_neuron() << " iMAX:" << Lines[l].get_number_neuron() << "neuron connections [" << l+1 << "] = " << Lines[l+1].get_neuron(0)->numberConnection() << endl;
+		for(int j(0);j<Lines[l+1].get_number_neuron();j++)
+		{
 			a = 0;
-			//cout << "début" << endl;
 			for(int i(0);i<Lines[l].get_number_neuron();i++)
 			{
-				a+=Lines[l].get_neuron(i)->get_value()*Lines[l+1].get_neuron(j)->get_weight(i);
-				//cout << Lines[l+1].get_neuron(j)->get_weight(i) << endl;
+				a+=Lines[l].get_neuron(i)->get_value()*Lines[l+1].get_neuron(j)->get_weight(i); 
 			}
-			Lines[l+1].get_neuron(j)->set_value(sigmoid(a+Lines[l+1].get_neuron(j)->get_bias()));
-			//cout << "fin résultat a l:" << l+1 << " j:" << j << " valeur:" << Lines[l+1].get_neuron(j)->get_value() << endl;
+			Lines[l+1].get_neuron(j)->set_value(sigmoid(a+Lines[l+1].get_neuron(j)->get_bias()));	
+			//cout << "neuroon l:" << l+1 << " j:" << j << " ---> " << Lines[l+1].get_neuron(j)->get_value() << endl;
 		}
 	}
 }
@@ -136,6 +155,11 @@ void MachineLearning::addColumn(int numberNeuron)
 	//Lines[Lines.size()-1].get_number_neuron();
 	Lines.push_back(NetworkNeuron(numberNeuron,Lines[Lines.size()-1].getme()));
 	Lines[Lines.size()-2].set_after(Lines[Lines.size()-1].getme());
+}
+
+int MachineLearning::numberNeuronIn(int i)
+{
+	return Lines[i].get_number_neuron();
 }
 
 int MachineLearning::getNumberColumn() const
