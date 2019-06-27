@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 	cout << "précision = " << machine.getPrecision(resultats) << endl;
 
 	//train
-	for(int i(0);i<10000;i++)
+	for(int i(0);i<60000;i++)
 	{
 		images_train.seekg(16+i*784,ios::beg);
 		memset(data,0,784);
@@ -76,7 +76,9 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.train(resultats);
+		cout << "*";
 	}
+	cout << endl;
 
 	//test2
 	machine.setInput(data);
