@@ -10,7 +10,8 @@
 #include <iostream>
 
 double sigmoid(double a);
- 
+double deriSigmoid(double a);
+
 class Neuron
 {
 public:
@@ -55,7 +56,7 @@ public:
 	void addColumn(int numberNeuron);
 	int getNumberColumn() const; 
 	double getPrecision(NetworkNeuron& result);
-	void train(NetworkNeuron const& result);
+	void train(NetworkNeuron& result);
 protected:
 	std::vector<NetworkNeuron> Lines;
 };

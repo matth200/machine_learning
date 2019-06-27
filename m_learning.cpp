@@ -8,6 +8,12 @@ double sigmoid(double a)
      return 1.0/(1.0+exp(-a));
 }
 
+//fonction qui renvoit la dérivé de la fonction sigmoid
+double deriSigmoid(double a)
+{
+	return (exp(a)*pow(1+exp(-a),2))/exp(2*a);
+}
+
 Neuron::Neuron(int size, bool isRandom)
 {
 	//initialisation des valeurs
@@ -172,8 +178,29 @@ double MachineLearning::getPrecision(NetworkNeuron& result)
 	return diff;
 }
 
-void MachineLearning::train(NetworkNeuron const& result)
+void MachineLearning::train(NetworkNeuron& result)
 {
-	
+	//retropropagation pour apprendre au réseaux on regarde les pentes de chaque variable pour se diriger vers une fonction de cout plus proche de 0
+	for(int l(Lines.size()-1);l>0;l--)
+	{
+		for(int j(0);j<Lines[l].get_number_neuron();j++)
+		{
+			double r = 0.1; //changement r
+			double z = Lines[l].get_neuron(j)->get_bias();
+			for(int x(0);x<Lines[l-1].get_number_neuron();x++)
+			{
+				z+=Lines[l-1].get_neuron(x)->get_value()*Lines[l].get_neuron(j)->get_weight(x);
+			}
+			double a = sigmoid(z);
+			double y = result.get_neuron(j)->get_value();
+			//on modifie le biais avec sa dérivée
+			Lines[l].get_neuron(j)->set_bias(Lines[l].get_neuron(j)->get_bias()-r*(deriSigmoid(z)*2.0*(a-y)));	
+			//on modifie les poids avec leur dérivé aussi
+			for(int i(0);i<Lines[l].get_neuron(j)->numberConnection();i++)
+			{
+				Lines[l].get_neuron(j)->set_weight(i,Lines[l].get_neuron(j)->get_weight(i)-r*(Lines[l-1].get_neuron(i)->get_value()*deriSigmoid(z)*2.0*(a-y)));		
+			}
+		}
+	}	
 }
 

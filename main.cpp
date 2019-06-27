@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	cout << "calcul(x)" << endl;
 	machine.calcul();
 	
-
+	//test1
 	NetworkNeuron resultats(10,0);
 	resultats.get_neuron(numberCorrect)->set_value(1);
 	cout << "résultat :" << endl;
@@ -77,6 +77,24 @@ int main(int argc, char *argv[])
 		machine.setInput(data);
 		machine.train(resultats);
 	}
+
+	//test2
+	machine.setInput(data);
+	machine.setWeightRandom();
+	cout << "calcul(x)" << endl;
+	machine.calcul();
+
+	NetworkNeuron resultats2(10,0);
+	resultats2.get_neuron(numberCorrect)->set_value(1);
+	cout << "résultat :" << endl;
+	for(int i(0);i<machine.numberNeuronIn(machine.getNumberColumn()-1);i++)
+	{
+		cout << i << " --> " << machine.getOutput(i);
+		if(i==numberCorrect)
+			cout << "<<<<<<<<<<<<";
+		cout << endl;
+	}
+	cout << "précision = " << machine.getPrecision(resultats2) << endl;
 
 	return 0;
 }
