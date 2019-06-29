@@ -185,7 +185,7 @@ void MachineLearning::train(NetworkNeuron& result)
 	{
 		for(int j(0);j<Lines[l].get_number_neuron();j++)
 		{
-			double r = 0.1; //changement r
+			double r = 3; //changement r
 			double z = Lines[l].get_neuron(j)->get_bias();
 			for(int x(0);x<Lines[l-1].get_number_neuron();x++)
 			{

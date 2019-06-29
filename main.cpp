@@ -12,25 +12,7 @@ int main(int argc, char *argv[])
 {
 	cout << "initialisation" << endl;
 	char data[784];
-
-	cout << "lecture image dans le fichier" << endl;	
-	//lecture de l'image dans un tableau en binaire
-	ifstream images_train("train-images.idx3-ubyte",ios::binary);
-	images_train.seekg(16,ios::beg);
-	memset(data,0,784);
-	images_train.read(data,784);
 	
-	cout << "lecture chiffre dans le fichier" << endl;
-	//lecture du chiffre
-	int numberCorrect = -1;
-	ifstream file("train-labels.idx1-ubyte",ios::binary);
-	unsigned char number;
-	file.seekg(8,ios::beg);
-	file.read((char*)&number,1);
-	numberCorrect =  int(number);
-
-	cout << "structure de données" << endl;
-	//mise en place de la structure du Réseau de neurone
 	MachineLearning machine(784);
 	//ajout de colone
 	cout << "ajout de colone" << endl;
@@ -38,28 +20,60 @@ int main(int argc, char *argv[])
 	machine.addColumn(16);
 	machine.addColumn(10);
 
-	cout << "données image --->> dans la structure" << endl;
+	//cout << "données aléatoires" << endl;
 	//on rentre les données
-	machine.setInput(data);
 	machine.setWeightRandom();
-	cout << "calcul(x)" << endl;
-	machine.calcul();
 	
-	//test1
-	NetworkNeuron resultats(10,0);
-	resultats.get_neuron(numberCorrect)->set_value(1);
-	cout << "résultat :" << endl;
-	for(int i(0);i<machine.numberNeuronIn(machine.getNumberColumn()-1);i++)
-	{
-		cout << i << " --> " << machine.getOutput(i);
-		if(i==numberCorrect)
-			cout << "<<<<<<<<<<<<";
-		cout << endl;
-	}
-	cout << "précision = " << machine.getPrecision(resultats) << endl;
 
+	ifstream file("train-labels.idx1-ubyte",ios::binary);
+	ifstream images_train("train-images.idx3-ubyte",ios::binary);
+	
+
+	//test1
+	double accurency = 0;
+	int good = 0, bad = 0;
+	int numberCorrect = -1;
+	unsigned char number;
+	for(int i(0);i<100;i++)
+	{
+		file.seekg(8+i,ios::beg);
+		file.read((char*)&number,1);
+		numberCorrect =  int(number);
+		
+
+		images_train.seekg(16+i*784,ios::beg);
+		memset(data,0,784);
+		images_train.read(data,784);
+		
+		NetworkNeuron resultats(10,0);
+		resultats.get_neuron(numberCorrect)->set_value(1);
+		
+		machine.setInput(data);
+		machine.calcul();
+		double max = 0;
+		int indexMax = -1;
+		for(int a(0);a<10;a++)
+		{
+			double v = machine.getOutput(a);
+			if(v>max)
+			{
+				max=v;
+				indexMax=a;
+			}
+		}
+		if(indexMax==numberCorrect)
+			good++;
+		else
+			bad++;
+		accurency += (10-machine.getPrecision(resultats))/10.0*100.0;
+	}
+	accurency/=100.0;
+
+	cout << "test1" << endl;
+	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
+	
 	//train
-	for(int i(0);i<60000;i++)
+	for(int i(0);i<10000;i++)
 	{
 		images_train.seekg(16+i*784,ios::beg);
 		memset(data,0,784);
@@ -75,28 +89,55 @@ int main(int argc, char *argv[])
 		resultats.get_neuron(numberC)->set_value(1);
 		
 		machine.setInput(data);
+		machine.calcul();
 		machine.train(resultats);
-		cout << "*";
+		//cout << "*";
 	}
 	cout << endl;
 
+	
 	//test2
-	machine.setInput(data);
-	machine.setWeightRandom();
-	cout << "calcul(x)" << endl;
-	machine.calcul();
-
-	NetworkNeuron resultats2(10,0);
-	resultats2.get_neuron(numberCorrect)->set_value(1);
-	cout << "résultat :" << endl;
-	for(int i(0);i<machine.numberNeuronIn(machine.getNumberColumn()-1);i++)
+	accurency = 0;
+	good = 0;
+	bad = 0;
+	numberCorrect = -1;
+	for(int i(0);i<100;i++)
 	{
-		cout << i << " --> " << machine.getOutput(i);
-		if(i==numberCorrect)
-			cout << "<<<<<<<<<<<<";
-		cout << endl;
+		file.seekg(8+i,ios::beg);
+		file.read((char*)&number,1);
+		numberCorrect =  int(number);
+		
+
+		images_train.seekg(16+i*784,ios::beg);
+		memset(data,0,784);
+		images_train.read(data,784);
+		
+		NetworkNeuron resultats(10,0);
+		resultats.get_neuron(numberCorrect)->set_value(1);
+		
+		machine.setInput(data);
+		machine.calcul();
+		double max = 0;
+		int indexMax = -1;
+		for(int a(0);a<10;a++)
+		{
+			double v = machine.getOutput(a);
+			if(v>max)
+			{
+				max=v;
+				indexMax=a;
+			}
+		}
+		if(indexMax==numberCorrect)
+			good++;
+		else
+			bad++;
+		accurency += (10-machine.getPrecision(resultats))/10.0*100.0;
 	}
-	cout << "précision = " << machine.getPrecision(resultats2) << endl;
+	accurency/=100.0;
+
+	cout << "test2" << endl;
+	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
 
 	return 0;
 }
