@@ -11,7 +11,7 @@ double sigmoid(double a)
 //fonction qui renvoit la dérivé de la fonction sigmoid
 double deriSigmoid(double a)
 {
-	return (exp(a)*pow(1+exp(-a),2))/exp(2*a);
+	return -pow(1-exp(-a),-2)*exp(-a);
 }
 
 Neuron::Neuron(int size, bool isRandom)
@@ -19,6 +19,7 @@ Neuron::Neuron(int size, bool isRandom)
 	//initialisation des valeurs
 	value = 0;
 	b = 0;
+	deriError = 0;
 	w.resize(size);
 }
 
@@ -52,6 +53,16 @@ void Neuron::set_bias(double bias)
 double Neuron::get_bias() const
 {
 	return b;
+}
+
+void Neuron::set_error(double error)
+{
+	deriError = error;
+}
+
+double Neuron::get_error() const
+{
+	return deriError;
 }
 
 int Neuron::numberConnection() const
@@ -104,7 +115,7 @@ MachineLearning::MachineLearning(int sizeInput)
 void MachineLearning::setInput(char *data)
 {
 	double value = 0;
-	for(int i(0);i<786;i++)
+	for(int i(0);i<784;i++)
 	{
 		value = (*((unsigned char*)(data+i)))/255.0;
 		Lines[0].get_neuron(i)->set_value(value);
@@ -181,11 +192,12 @@ double MachineLearning::getPrecision(NetworkNeuron& result)
 void MachineLearning::train(NetworkNeuron& result)
 {
 	//retropropagation pour apprendre au réseaux on regarde les pentes de chaque variable pour se diriger vers une fonction de cout plus proche de 0
+	bool first = 1;
 	for(int l(Lines.size()-1);l>0;l--)
 	{
 		for(int j(0);j<Lines[l].get_number_neuron();j++)
 		{
-			double r = 3; //changement r
+			double r = 0.3; //changement r
 			double z = Lines[l].get_neuron(j)->get_bias();
 			for(int x(0);x<Lines[l-1].get_number_neuron();x++)
 			{
@@ -194,13 +206,28 @@ void MachineLearning::train(NetworkNeuron& result)
 			double a = sigmoid(z);
 			double y = result.get_neuron(j)->get_value();
 			//on modifie le biais avec sa dérivée
-			Lines[l].get_neuron(j)->set_bias(Lines[l].get_neuron(j)->get_bias()-r*(deriSigmoid(z)*2.0*(a-y)));	
+ 			Lines[l].get_neuron(j)->set_bias(Lines[l].get_neuron(j)->get_bias()-r*(deriSigmoid(z)*2.0*(a-y)));	
 			//on modifie les poids avec leur dérivé aussi
 			for(int i(0);i<Lines[l].get_neuron(j)->numberConnection();i++)
 			{
-				Lines[l].get_neuron(j)->set_weight(i,Lines[l].get_neuron(j)->get_weight(i)-r*(Lines[l-1].get_neuron(i)->get_value()*deriSigmoid(z)*2.0*(a-y)));		
+				if(first)
+				{
+					Lines[l].get_neuron(j)->set_weight(i,Lines[l].get_neuron(j)->get_weight(i)-r*(Lines[l-1].get_neuron(i)->get_value()*deriSigmoid(z)*2.0*(a-y)));		
+					Lines[l].get_neuron(j)->set_error(2.0*deriSigmoid(z)*(a-y));		
+				}
+				else{
+					double deriError = 0;
+					for(int k(0);k<Lines[l+1].get_number_neuron();k++)
+					{
+						deriError += Lines[l+1].get_neuron(k)->get_weight(j)*Lines[l+1].get_neuron(k)->get_error();
+					}
+					deriError *= 2.0*deriSigmoid(z);
+					Lines[l].get_neuron(j)->set_error(deriError);
+					Lines[l].get_neuron(j)->set_weight(i,Lines[l].get_neuron(j)->get_weight(i)-r*(Lines[l-1].get_neuron(i)->get_value()*deriSigmoid(z)*2.0*(deriError)));			
+				}
 			}
 		}
+		first = 0;
 	}	
 }
 

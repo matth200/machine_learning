@@ -22,10 +22,13 @@ public:
 	double get_weight(int i) const;
 	void set_bias(double bias);
 	double get_bias() const;
+	double get_error() const;
+	void set_error(double error);
 	int numberConnection() const;
 protected:
 	double value;
 	double b;
+	double deriError;
 	std::vector<double> w;
 };
 

@@ -34,14 +34,14 @@ int main(int argc, char *argv[])
 	int good = 0, bad = 0;
 	int numberCorrect = -1;
 	unsigned char number;
-	for(int i(0);i<100;i++)
+	for(int i(0);i<1;i++)
 	{
-		file.seekg(8+i,ios::beg);
+		file.seekg(8+(i+3),ios::beg);
 		file.read((char*)&number,1);
 		numberCorrect =  int(number);
 		
 
-		images_train.seekg(16+i*784,ios::beg);
+		images_train.seekg(16+(i+3)*784,ios::beg);
 		memset(data,0,784);
 		images_train.read(data,784);
 		
@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 		for(int a(0);a<10;a++)
 		{
 			double v = machine.getOutput(a);
+			cout << " i:" << a << " ---> " << v << ((a!=numberCorrect)?"":"<<<<") << endl;
 			if(v>max)
 			{
 				max=v;
@@ -67,7 +68,6 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += (10-machine.getPrecision(resultats))/10.0*100.0;
 	}
-	accurency/=100.0;
 
 	cout << "test1" << endl;
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
@@ -101,14 +101,14 @@ int main(int argc, char *argv[])
 	good = 0;
 	bad = 0;
 	numberCorrect = -1;
-	for(int i(0);i<100;i++)
+	for(int i(0);i<1;i++)
 	{
-		file.seekg(8+i,ios::beg);
+		file.seekg(8+(i+3),ios::beg);
 		file.read((char*)&number,1);
 		numberCorrect =  int(number);
 		
 
-		images_train.seekg(16+i*784,ios::beg);
+		images_train.seekg(16+(i+3)*784,ios::beg);
 		memset(data,0,784);
 		images_train.read(data,784);
 		
@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
 		for(int a(0);a<10;a++)
 		{
 			double v = machine.getOutput(a);
+			cout << " i:" << a << " ---> " << v << ((a!=numberCorrect)?"":"<<<<") << endl;
 			if(v>max)
 			{
 				max=v;
@@ -134,7 +135,7 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += (10-machine.getPrecision(resultats))/10.0*100.0;
 	}
-	accurency/=100.0;
+
 
 	cout << "test2" << endl;
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
