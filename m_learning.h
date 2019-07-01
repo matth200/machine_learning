@@ -41,7 +41,6 @@ public:
 	NetworkNeuron* getme();
 	int get_number_neuron() const;
 	Neuron* get_neuron(int index);
-	void backpropagation();
 protected:
 	std::vector<Neuron> neurons;
 	NetworkNeuron *beforeNetwork, *afterNetwork;
@@ -59,7 +58,7 @@ public:
 	void addColumn(int numberNeuron);
 	int getNumberColumn() const; 
 	double getPrecision(NetworkNeuron& result);
-	void train(NetworkNeuron& result);
+	void train(NetworkNeuron& result, double r = 0.5);
 protected:
 	std::vector<NetworkNeuron> Lines;
 };

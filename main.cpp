@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
 	
 	//train
-	for(int i(0);i<50000;i++)
+	for(int i(0);i<10000;i++)
 	{
 		images_train.seekg(16+i*784,ios::beg);
 		memset(data,0,784);
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
-		machine.train(resultats);
+		machine.train(resultats,0.5);
 		//cout << "*";
 	}
 	cout << endl;

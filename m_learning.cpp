@@ -11,7 +11,7 @@ double sigmoid(double a)
 //fonction qui renvoit la dérivé de la fonction sigmoid
 double sigmoidPrime(double a)
 {
-	return sigmoid(a)*(1.0-sigmoid(a));
+	return sigmoid(a) * (1.0 - sigmoid(a));
 }
 
 Neuron::Neuron(int size, bool isRandom)
@@ -102,11 +102,6 @@ Neuron* NetworkNeuron::get_neuron(int index)
 	return &(neurons[index]);	
 }
 
-void NetworkNeuron::backpropagation()
-{
-
-}
-
 MachineLearning::MachineLearning(int sizeInput)
 {
 	Lines.push_back(NetworkNeuron(sizeInput,0));
@@ -143,7 +138,6 @@ void MachineLearning::calcul()
 	double a = 0;
 	for(int l(0);l<Lines.size()-1;l++)
 	{
-		//cout << "l:" << l+1 << "jMAX:" << Lines[l+1].get_number_neuron() << " iMAX:" << Lines[l].get_number_neuron() << "neuron connections [" << l+1 << "] = " << Lines[l+1].get_neuron(0)->numberConnection() << endl;
 		for(int j(0);j<Lines[l+1].get_number_neuron();j++)
 		{
 			a = 0;
@@ -152,7 +146,6 @@ void MachineLearning::calcul()
 				a+=Lines[l].get_neuron(i)->get_value()*Lines[l+1].get_neuron(j)->get_weight(i); 
 			}
 			Lines[l+1].get_neuron(j)->set_value(sigmoid(a+Lines[l+1].get_neuron(j)->get_bias()));	
-			//cout << "neuroon l:" << l+1 << " j:" << j << " ---> " << Lines[l+1].get_neuron(j)->get_value() << endl;
 		}
 	}
 }
@@ -189,7 +182,7 @@ double MachineLearning::getPrecision(NetworkNeuron& result)
 	return diff;
 }
 
-void MachineLearning::train(NetworkNeuron& result)
+void MachineLearning::train(NetworkNeuron& result, double r)
 {
 	//retropropagation des erreurs
 	for(int l(Lines.size()-1);l>0;l--)
@@ -204,7 +197,7 @@ void MachineLearning::train(NetworkNeuron& result)
 				for(int i(0);i<Lines[l+1].get_number_neuron();i++)
 				{	
 					Neuron &neuron = *Lines[l+1].get_neuron(i);
-				        error+=neuron.get_weight(j)*neuron.get_error();	
+				        error+=neuron.get_weight(j)*neuron.get_error();
 				}
 				errors.push_back(error);
 			}
@@ -212,19 +205,18 @@ void MachineLearning::train(NetworkNeuron& result)
 			else{
 				for(int i(0);i<Lines[l].get_number_neuron();i++)
 				{
-					errors.push_back(getOutput(i)-result.get_neuron(i)->get_value());
+					errors.push_back(Lines[l].get_neuron(i)->get_value()-result.get_neuron(i)->get_value());
 				}
 			}
 		}
 		for(int j(0);j<Lines[l].get_number_neuron();j++)
 		{
 			Neuron &neuron = *Lines[l].get_neuron(j);
-			neuron.set_error(errors[j] * sigmoidPrime(getOutput(j)));			
+			neuron.set_error(errors[j] * sigmoidPrime(neuron.get_value()));			
 		}
 	}
 	
 	//mise à jour des biais et des poids
-	double r = 0.1;
 	for(int l(Lines.size()-1);l>0;l--)
 	{
 		for(int j(0);j<Lines[l].get_number_neuron();j++)
