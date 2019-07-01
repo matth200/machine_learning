@@ -11,7 +11,7 @@ double sigmoid(double a)
 //fonction qui renvoit la dérivé de la fonction sigmoid
 double sigmoidPrime(double a)
 {
-	return a*(1.0-a);
+	return sigmoid(a)*(1.0-sigmoid(a));
 }
 
 Neuron::Neuron(int size, bool isRandom)
