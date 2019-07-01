@@ -151,7 +151,10 @@ void MachineLearning::calcul()
 }
 
 double MachineLearning::getOutput(int index)
-{	
+{
+	if(index==0)
+		cout << "--------------------" << endl;	
+	cout << "Error: " << Lines[Lines.size()-1].get_neuron(index)->get_error() << endl;
 	return Lines[Lines.size()-1].get_neuron(index)->get_value();
 }
 
@@ -187,32 +190,27 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 	//retropropagation des erreurs
 	for(int l(Lines.size()-1);l>0;l--)
 	{
-		vector<double> errors(0,0);
 		for(int j(0);j<Lines[l].get_number_neuron();j++)
 		{
+			double error = 0.0;
 			//si c'est dans les couches cachés
 			if(l!=Lines.size()-1)
 			{
-				double error = 0.0;
 				for(int i(0);i<Lines[l+1].get_number_neuron();i++)
 				{	
 					Neuron &neuron = *Lines[l+1].get_neuron(i);
-				        error+=neuron.get_weight(j)*neuron.get_error();
+				    error+=neuron.get_weight(j)*neuron.get_error();
 				}
-				errors.push_back(error);
 			}
 			//si c'est la couche de sortie des neurones
 			else{
 				for(int i(0);i<Lines[l].get_number_neuron();i++)
 				{
-					errors.push_back(Lines[l].get_neuron(i)->get_value()-result.get_neuron(i)->get_value());
+					error = Lines[l].get_neuron(i)->get_value()-result.get_neuron(i)->get_value();
 				}
 			}
-		}
-		for(int j(0);j<Lines[l].get_number_neuron();j++)
-		{
 			Neuron &neuron = *Lines[l].get_neuron(j);
-			neuron.set_error(errors[j] * sigmoidPrime(neuron.get_value()));			
+			neuron.set_error(error * sigmoidPrime(neuron.get_value()));			
 		}
 	}
 	
@@ -232,4 +230,4 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 		}
 	}
 }
-
+ 

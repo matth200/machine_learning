@@ -10,7 +10,7 @@
 #include <iostream>
 
 double sigmoid(double a);
-double deriSigmoid(double a);
+double sigmoidPrime(double a);
 
 class Neuron
 {

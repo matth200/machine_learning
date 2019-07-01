@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	int good = 0, bad = 0;
 	int numberCorrect = -1;
 	unsigned char number;
-	for(int i(0);i<100;i++)
+	for(int i(0);i<10;i++)
 	{
 		file.seekg(8+i,ios::beg);
 		file.read((char*)&number,1);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += machine.getPrecision(resultats);
 	}
-	accurency/=100.0;
+	accurency/=10.0;
 
 	cout << "test1" << endl;
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
-		machine.train(resultats,0.5);
+		machine.train(resultats,100);
 		//cout << "*";
 	}
 	cout << endl;
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 	good = 0;
 	bad = 0;
 	numberCorrect = -1;
-	for(int i(0);i<100;i++)
+	for(int i(0);i<10;i++)
 	{
 		file.seekg(8+i,ios::beg);
 		file.read((char*)&number,1);
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += machine.getPrecision(resultats);
 	}
-	accurency/=100.0;
+	accurency/=10.0;
 
 	cout << "test2" << endl;
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
