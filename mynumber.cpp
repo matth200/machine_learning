@@ -10,7 +10,8 @@ GetNumber::GetNumber(const char* filename)
 	m_file.open(filename,ios::binary);
 	m_file.seekg(16,ios::beg);
 	
-	Glib::signal_timeout().connect(sigc::mem_fun(*this,&GetNumber::on_loop),700);
+	first = 1;
+	Glib::signal_idle().connect(sigc::mem_fun(*this,&GetNumber::on_loop));
 }
 
 GetNumber::~GetNumber()
@@ -39,8 +40,10 @@ void GetNumber::clear()
 
 bool GetNumber::on_loop()
 {
-	Cairo::RefPtr<Cairo::Context> cr = this->get_window()->create_cairo_context();
-
+	if(first){
+		cr = this->get_window()->create_cairo_context();
+		first=0;
+	}
 	Gtk::Allocation allocation = get_allocation();
 
 	const int width = allocation.get_width();
@@ -50,8 +53,7 @@ bool GetNumber::on_loop()
 	m_file.seekg(16+m_index*784,ios::beg);
 	memset((char*)m_data,0,784);
 	m_file.read((char*)m_data,784);
-	
-	m_index++;
+
 	cr->set_source_rgb(1.0,1.0,1.0);
 	cr->paint();
 
@@ -59,7 +61,7 @@ bool GetNumber::on_loop()
 	{
 		cr->set_source_rgb(m_data[i]/255.0,m_data[i]/255.0,m_data[i]/255.0);
 
-		int a = 10+i%28, b = 10+i/28;
+		int a = 70+i%28*4, b = 70+i/28*4;
 		
 		cr->move_to(a,b);
 		cr->line_to(a+30,b);
@@ -68,6 +70,10 @@ bool GetNumber::on_loop()
 		
 		cr->fill();
 	}
+	now = chrono::high_resolution_clock();
+	long int chrono::duration_cast<chrono::millisecond>(now-prevTime).count()<1000.0/30.0)
+	{
+		this_thread::sleep_for(chrono::millisecond());
 	
 	return 1;
 }

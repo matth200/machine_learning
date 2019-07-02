@@ -26,9 +26,11 @@ protected:
 	bool on_loop();		
 
 private:
+	Cairo::RefPtr<Cairo::Context> cr;
 	std::ifstream m_file;
 	unsigned int m_index;
 	unsigned char *m_data;
+	bool first;
 };
 
 #endif

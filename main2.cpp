@@ -2,6 +2,7 @@
 #include <gtkmm/main.h>
 #include <gtkmm/button.h>
 #include <gtkmm/box.h>
+#include <gtkmm/buttonbox.h>
 
 #include "mynumber.h"
 
@@ -16,7 +17,7 @@ int main(int argc, char *argv[])
 	GetNumber areaNumber("train-images.idx3-ubyte");
 
 	Gtk::VBox vbox;
-	Gtk::HBox hbox;
+	Gtk::HButtonBox hbox;
 		
 	Gtk::Button buttonNext("Next");
 	Gtk::Button buttonBefore("Before");
