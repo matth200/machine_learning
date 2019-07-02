@@ -52,7 +52,8 @@ public:
 	MachineLearning(int sizeInput);
 	void setInput(char *data);
 	void setWeightRandom();
-       	void calcul();	
+       	void calcul();
+	double getZ(int l, int j);	
 	double getOutput(int index);
         int numberNeuronIn(int i);	
 	void addColumn(int numberNeuron);

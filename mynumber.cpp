@@ -71,9 +71,10 @@ bool GetNumber::on_loop()
 		cr->fill();
 	}
 	now = chrono::high_resolution_clock();
-	long int chrono::duration_cast<chrono::millisecond>(now-prevTime).count()<1000.0/30.0)
+	long int delta = chrono::duration_cast<chrono::millisecond>(now-prevTime).count();
+	if(delta<1000.0/30.0)
 	{
-		this_thread::sleep_for(chrono::millisecond());
-	
+		this_thread::sleep_for(chrono::millisecond(1000.0/30.0-delta));
+	}	
 	return 1;
 }

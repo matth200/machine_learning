@@ -11,7 +11,7 @@ double sigmoid(double a)
 //fonction qui renvoit la dérivé de la fonction sigmoid
 double sigmoidPrime(double a)
 {
-	return a * (1.0 - a);
+	return sigmoid(a) * (1.0 - sigmoid(a));
 }
 
 Neuron::Neuron(int size, bool isRandom)
@@ -150,11 +150,21 @@ void MachineLearning::calcul()
 	}
 }
 
+double MachineLearning::getZ(int l, int j)
+{
+	double a = 0;
+	for(int i(0);i<Lines[l-1].get_number_neuron();i++)
+	{
+		a+=Lines[l-1].get_neuron(i)->get_value()*Lines[l].get_neuron(j)->get_weight(i); 
+	}
+	return a+Lines[l].get_neuron(j)->get_bias();
+}
+
 double MachineLearning::getOutput(int index)
 {
-	if(index==0)
-		cout << "--------------------" << endl;	
-	cout << "Error: " << Lines[Lines.size()-1].get_neuron(index)->get_error() << endl;
+	//if(index==0)
+		//cout << "--------------------" << endl;	
+	//cout << "Error: " << Lines[Lines.size()-1].get_neuron(index)->get_error() << endl;
 	return Lines[Lines.size()-1].get_neuron(index)->get_value();
 }
 
@@ -199,18 +209,15 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 				for(int i(0);i<Lines[l+1].get_number_neuron();i++)
 				{	
 					Neuron &neuron = *Lines[l+1].get_neuron(i);
-				    error+=neuron.get_weight(j)*neuron.get_error();
+				        error+=neuron.get_weight(j)*neuron.get_error();
 				}
 			}
 			//si c'est la couche de sortie des neurones
 			else{
-				for(int i(0);i<Lines[l].get_number_neuron();i++)
-				{
-					error = Lines[l].get_neuron(i)->get_value()-result.get_neuron(i)->get_value();
-				}
+				error = sigmoid(getZ(l,j))-result.get_neuron(j)->get_value();
 			}
 			Neuron &neuron = *Lines[l].get_neuron(j);
-			neuron.set_error(error * sigmoidPrime(neuron.get_value()));			
+			neuron.set_error(error * sigmoidPrime(getZ(l,j)));			
 		}
 	}
 	
@@ -225,7 +232,7 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 			//weight
 			for(int i(0);i<Lines[l].get_neuron(j)->numberConnection();i++)
 			{
-				neuron.set_weight(i,neuron.get_weight(i)-r*neuron.get_error()*Lines[l-1].get_neuron(i)->get_value());
+				neuron.set_weight(i,neuron.get_weight(i)-r*neuron.get_error()*sigmoid(getZ(l,j)));
 			}
 		}
 	}
