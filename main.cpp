@@ -10,6 +10,7 @@
 using namespace std;
 int main(int argc, char *argv[])
 {
+	srand(time(NULL));
 	cout << "initialisation" << endl;
 	char data[784];
 	
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
 	int good = 0, bad = 0;
 	int numberCorrect = -1;
 	unsigned char number;
-	for(int i(0);i<10;i++)
+	for(int i(0);i<100;i++)
 	{
 		file.seekg(8+i,ios::beg);
 		file.read((char*)&number,1);
@@ -68,11 +69,31 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += machine.getPrecision(resultats);
 	}
-	accurency/=10.0;
+	accurency/=100.0;
 
 	cout << "test1" << endl;
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
-	
+
+	int numberRandom = rand()%1000;
+	file.seekg(8+numberRandom,ios::beg);
+	file.read((char*)&number,1);
+	numberCorrect =  int(number);
+
+	images_train.seekg(16+numberRandom*784,ios::beg);
+	memset(data,0,784);
+	images_train.read(data,784);
+		
+	machine.setInput(data);
+	machine.calcul();
+	cout << "1. prédiction sur le chiffre " << numberCorrect << endl;
+	for(int a(0);a<10;a++)
+	{
+		cout << a << ". " << machine.getOutput(a);
+	       	if(a==numberCorrect)
+			cout << " <<<<";
+		cout << endl;	
+	}
+
 	//train
 	for(int i(0);i<10000;i++)
 	{
@@ -91,8 +112,8 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
-		machine.train(resultats,100);
-		//cout << "*";
+		machine.train(resultats,1);
+		//cout << i << endl;
 	}
 	cout << endl;
 
@@ -102,7 +123,7 @@ int main(int argc, char *argv[])
 	good = 0;
 	bad = 0;
 	numberCorrect = -1;
-	for(int i(0);i<10;i++)
+	for(int i(0);i<100;i++)
 	{
 		file.seekg(8+i,ios::beg);
 		file.read((char*)&number,1);
@@ -136,10 +157,29 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += machine.getPrecision(resultats);
 	}
-	accurency/=10.0;
+	accurency/=100.0;
 
 	cout << "test2" << endl;
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
 
+	numberRandom = rand()%1000;
+	file.seekg(8+numberRandom,ios::beg);
+	file.read((char*)&number,1);
+	numberCorrect =  int(number);
+
+	images_train.seekg(16+numberRandom*784,ios::beg);
+	memset(data,0,784);
+	images_train.read(data,784);
+		
+	machine.setInput(data);
+	machine.calcul();
+	cout << "2. prédiction sur le chiffre " << numberCorrect << endl;
+	for(int a(0);a<10;a++)
+	{
+		cout << a << ". " << machine.getOutput(a);
+	       	if(a==numberCorrect)
+			cout << " <<<<";
+		cout << endl;	
+	}
 	return 0;
 }
