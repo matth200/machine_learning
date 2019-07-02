@@ -200,10 +200,8 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 	//retropropagation des erreurs
 	for(int l(Lines.size()-1);l>0;l--)
 	{
-		//cout << "---l:" << l << endl;
 		for(int j(0);j<Lines[l].get_number_neuron();j++)
 		{
-			//cout << "j:" << j << endl;
 			double error = 0.0;
 			//si c'est dans les couches cachés
 			if(l!=Lines.size()-1)
@@ -216,25 +214,19 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 			}
 			//si c'est la couche de sortie des neurones
 			else{
-				//cout << "output" << endl;
 				error = getOutput(j)-result.get_neuron(j)->get_value();
 			}
 			Neuron &neuron = *Lines[l].get_neuron(j);
 			neuron.set_error(error * sigmoidPrime(neuron.get_value()));			
-			//cout << "error : " << neuron.get_error() << endl;
 		}
 	}
 	
-	int pp = 0;
-	double error_average = 0;	
 	//mise à jour des biais et des poids
 	for(int l(Lines.size()-1);l>0;l--)
 	{
 		for(int j(0);j<Lines[l].get_number_neuron();j++)
 		{
 			Neuron &neuron = *Lines[l].get_neuron(j);
-			error_average+=neuron.get_error();
-			pp++;
 			//bias
 			neuron.set_bias(neuron.get_bias()-r*neuron.get_error());
 			//weight
@@ -244,7 +236,5 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 			}
 		}
 	}
-	error_average/=pp;
-	//cout << " moyenne des erreurs : " << error_average << endl;
 }
  

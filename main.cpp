@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	}
 
 	//train
-	for(int i(0);i<10000;i++)
+	for(int i(0);i<30000;i++)
 	{
 		images_train.seekg(16+i*784,ios::beg);
 		memset(data,0,784);
@@ -112,8 +112,7 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
-		machine.train(resultats,1);
-		//cout << i << endl;
+		machine.train(resultats,0.5);
 	}
 	cout << endl;
 
