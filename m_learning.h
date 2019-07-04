@@ -60,6 +60,8 @@ public:
 	int getNumberColumn() const; 
 	double getPrecision(NetworkNeuron& result);
 	void train(NetworkNeuron& result, double r = 0.5);
+	void saveTraining(const char *file);
+	void backupTraining(const char *file);
 protected:
 	std::vector<NetworkNeuron> Lines;
 };

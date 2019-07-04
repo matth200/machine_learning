@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
 	MachineLearning machine(784);
 	//ajout de colone
 	cout << "ajout de colone" << endl;
-	machine.addColumn(16);
-	machine.addColumn(16);
+	machine.addColumn(30);
+	machine.addColumn(20);
 	machine.addColumn(10);
 
 	//cout << "données aléatoires" << endl;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	int good = 0, bad = 0;
 	int numberCorrect = -1;
 	unsigned char number;
-	for(int i(0);i<100;i++)
+	for(int i(0);i<300;i++)
 	{
 		file.seekg(8+i,ios::beg);
 		file.read((char*)&number,1);
@@ -69,10 +69,10 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += machine.getPrecision(resultats);
 	}
-	accurency/=100.0;
+	accurency/=300.0;
 
 	cout << "test1" << endl;
-	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
+	cout << "accurency: " << accurency << " good:" << good/3.0 << " bad:" << bad/3.0 << endl;
 
 	int numberRandom = rand()%1000;
 	file.seekg(8+numberRandom,ios::beg);
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	}
 
 	//train
-	for(int i(0);i<30000;i++)
+	for(int i(0);i<50000;i++)
 	{
 		images_train.seekg(16+i*784,ios::beg);
 		memset(data,0,784);
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
-		machine.train(resultats,0.5);
+		machine.train(resultats,0.25);
 	}
 	cout << endl;
 
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 	good = 0;
 	bad = 0;
 	numberCorrect = -1;
-	for(int i(0);i<100;i++)
+	for(int i(0);i<300;i++)
 	{
 		file.seekg(8+i,ios::beg);
 		file.read((char*)&number,1);
@@ -156,10 +156,10 @@ int main(int argc, char *argv[])
 			bad++;
 		accurency += machine.getPrecision(resultats);
 	}
-	accurency/=100.0;
+	accurency/=300.0;
 
 	cout << "test2" << endl;
-	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
+	cout << "accurency: " << accurency << " good:" << good/3.0 << " bad:" << bad/3.0 << endl;
 
 	numberRandom = rand()%1000;
 	file.seekg(8+numberRandom,ios::beg);

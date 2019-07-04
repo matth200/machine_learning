@@ -10,8 +10,8 @@ GetNumber::GetNumber(const char* filename)
 	m_file.open(filename,ios::binary);
 	m_file.seekg(16,ios::beg);
 	
-	first = 1;
 	Glib::signal_idle().connect(sigc::mem_fun(*this,&GetNumber::on_loop));
+	first = 1;
 }
 
 GetNumber::~GetNumber()
@@ -39,10 +39,12 @@ void GetNumber::clear()
 }
 
 bool GetNumber::on_loop()
-{
-	if(first){
+{	
+	prevTime = chrono::high_resolution_clock::now();
+	if(first)
+	{
 		cr = this->get_window()->create_cairo_context();
-		first=0;
+		first = 0;
 	}
 	Gtk::Allocation allocation = get_allocation();
 
@@ -70,11 +72,10 @@ bool GetNumber::on_loop()
 		
 		cr->fill();
 	}
-	now = chrono::high_resolution_clock();
-	long int delta = chrono::duration_cast<chrono::millisecond>(now-prevTime).count();
+
+	actualTime = chrono::high_resolution_clock::now();
+	int delta = chrono::duration_cast<chrono::milliseconds>(actualTime-prevTime).count();
 	if(delta<1000.0/30.0)
-	{
-		this_thread::sleep_for(chrono::millisecond(1000.0/30.0-delta));
-	}	
+		this_thread::sleep_for(chrono::milliseconds(int(1000.0/30.0-delta)));
 	return 1;
 }

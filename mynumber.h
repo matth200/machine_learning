@@ -13,6 +13,8 @@
 #include <thread>
 #include <chrono>
 
+typedef std::chrono::high_resolution_clock::time_point time_point;
+
 class GetNumber : public Gtk::DrawingArea
 { 
 public:
@@ -30,6 +32,7 @@ private:
 	std::ifstream m_file;
 	unsigned int m_index;
 	unsigned char *m_data;
+	time_point prevTime, actualTime;	
 	bool first;
 };
 

@@ -237,4 +237,13 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 		}
 	}
 }
- 
+
+void MachineLearning::saveTraining(const char *file)
+{
+
+}
+
+void MachineLearning::backupTraining(const char *file)
+{
+
+} 
