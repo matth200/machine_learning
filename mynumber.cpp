@@ -63,7 +63,7 @@ bool GetNumber::on_loop()
 	{
 		cr->set_source_rgb(m_data[i]/255.0,m_data[i]/255.0,m_data[i]/255.0);
 
-		int a = 70+i%28*4, b = 70+i/28*4;
+		int a = width/2.0+(i%28-28/2.0)*(width/28.0), b = height/2.0+(i/28-28/2.0)*(height/28.0);
 		
 		cr->move_to(a,b);
 		cr->line_to(a+30,b);

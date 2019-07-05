@@ -240,10 +240,12 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 
 void MachineLearning::saveTraining(const char *file)
 {
+	ofstream f(file,ios::binary);
 
 }
 
 void MachineLearning::backupTraining(const char *file)
 {
+	ifstream f(file,ios::binary);
 
 } 

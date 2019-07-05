@@ -3,6 +3,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/box.h>
 #include <gtkmm/buttonbox.h>
+#include <gtkmm/label.h>
 
 #include "mynumber.h"
 
@@ -17,13 +18,19 @@ int main(int argc, char *argv[])
 	GetNumber areaNumber("train-images.idx3-ubyte");
 
 	Gtk::VBox vbox;
+	Gtk::HBox hhbox;
+
+	Gtk::Label label1("Nombre");
+
 	Gtk::HButtonBox hbox;
 		
 	Gtk::Button buttonNext("Next");
 	Gtk::Button buttonBefore("Before");
-		
 
-	vbox.pack_start(areaNumber);
+	hhbox.pack_start(areaNumber);
+	hhbox.pack_start(label1);
+
+	vbox.pack_start(hhbox);
 
 	hbox.pack_start(buttonBefore);
 	hbox.pack_start(buttonNext);
