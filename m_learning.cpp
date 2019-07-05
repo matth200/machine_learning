@@ -241,7 +241,17 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 void MachineLearning::saveTraining(const char *file)
 {
 	ofstream f(file,ios::binary);
-
+	f.seekp(0,ios::beg);
+	
+	//on enlève 1 parce que la couche en entrée n'a pas de poid ou de biais
+	int nbrNeuron = getNumberColumn();		
+	f.write((char*)&nbrNeuron,sizeof(nbrNeuron));
+	
+	int cursor = sizeof(nbrNeuron);
+	for(int i(0);i<nbrNeuron;i++)
+	{
+			
+	}
 }
 
 void MachineLearning::backupTraining(const char *file)
