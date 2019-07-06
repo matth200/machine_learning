@@ -23,6 +23,7 @@ public:
 	void nextNumber();
 	void beforeNumber();
 	void clear();
+	char* getData();
 
 protected:
 	bool on_loop();		

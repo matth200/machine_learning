@@ -343,4 +343,19 @@ void MachineLearning::backupTraining(const char *file)
 		else
 			cout << "Pas compatible" << endl;
 	}
+}
+
+int MachineLearning::getPrediction()
+{
+	double max = 0;
+	int iMax = 0;
+	for(int i(0);i<Lines[Lines.size()-1].get_number_neuron();i++)
+	{
+		if(max<getOutput(i))
+		{
+			max = getOutput(i);
+			iMax = i;
+		}	
+	}
+	return iMax;
 } 

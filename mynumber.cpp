@@ -38,6 +38,15 @@ void GetNumber::clear()
 	m_file.seekg(0,ios::beg);
 }
 
+char* GetNumber::getData()
+{
+	//get the info about the pixels
+	m_file.seekg(16+m_index*784,ios::beg);
+	memset((char*)m_data,0,784);
+	m_file.read((char*)m_data,784);
+	return (char*)m_data;
+}
+
 bool GetNumber::on_loop()
 {	
 	prevTime = chrono::high_resolution_clock::now();

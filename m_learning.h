@@ -64,6 +64,7 @@ public:
 	void train(NetworkNeuron& result, double r = 0.5);
 	void saveTraining(const char *file);
 	void backupTraining(const char *file);
+	int getPrediction();
 protected:
 	std::vector<NetworkNeuron> Lines;
 };
