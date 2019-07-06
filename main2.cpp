@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
 
 void callNext(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l)
 {
+	string texte = "nombre réel --> ";
 	i++;
  	unsigned char data = 0;
 	f.seekg(8+i,ios::beg);
@@ -72,10 +73,12 @@ void callNext(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l)
 	number = int(data);	
 
 	n->nextNumber();
-	l.set_text(to_string(number));
+	l.set_text(texte+to_string(number));
 }
+
 void callBefore(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l)
 {
+ 	string texte = "nombre réel --> ";
 	i--;
  	unsigned char data = 0;
 	f.seekg(8+i,ios::beg);
@@ -83,5 +86,5 @@ void callBefore(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l)
 	number = int(data);	
 
 	n->beforeNumber();
-	l.set_text(to_string(number));
+	l.set_text(texte+to_string(number));
 }
