@@ -240,18 +240,39 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 
 void MachineLearning::saveTraining(const char *file)
 {
-	ofstream f(file,ios::binary);
+	ofstream f(file,ios::binary|ios::trunc);
 	f.seekp(0,ios::beg);
 	
 	//on enlève 1 parce que la couche en entrée n'a pas de poid ou de biais
-	int nbrNeuron = getNumberColumn();		
-	f.write((char*)&nbrNeuron,sizeof(nbrNeuron));
+	int nbrColumn = getNumberColumn();		
+	f.write((char*)&nbrColumn,sizeof(nbrColumn));
 	
-	int cursor = sizeof(nbrNeuron);
-	for(int i(0);i<nbrNeuron;i++)
+	int cursor = sizeof(nbrColumn);
+	for(int i(0);i<nbrColumn;i++)
 	{
-			
+		int taille = Lines[i].get_number_neuron();
+		f.seekp(cursor,ios::beg);
+		f.write((char*)&taille,sizeof(taille));
+		cursor+=sizeof(taille);		
 	}
+
+	for(int l(0);l<nbrColumn-1;l++)
+	{
+		for(int j(0);j<Lines[l+1].get_number_neuron();j++)
+		{
+			for(int i(0);i<Lines[l].get_number_neuron();i++)
+			{
+				double actualWeight = Lines[l+1].get_neuron(j)->get_weight(i);
+				f.write((char*)&actualWeight,sizeof(actualWeight));
+				cursor+=sizeof(actualWeight);
+			}		
+			double biais = Lines[l+1].get_neuron(j)->get_bias();
+			f.write((char*)&biais,sizeof(biais));
+			cursor+=sizeof(biais);
+		}	
+	}
+	char end = 125;
+	f.write(&end,1);
 }
 
 void MachineLearning::backupTraining(const char *file)

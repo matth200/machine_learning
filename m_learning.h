@@ -9,6 +9,8 @@
 #include <ctime>
 #include <iostream>
 
+#include <fstream>
+
 double sigmoid(double a);
 double sigmoidPrime(double a);
 
