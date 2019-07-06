@@ -14,6 +14,12 @@ int main(int argc, char *argv[])
 	cout << "initialisation" << endl;
 	char data[784];
 	
+	if(argc<2)
+	{
+		cout << argv[0] << " aléatoire=O|N" << endl;
+		exit(0);
+	}
+	
 	MachineLearning machine(784);
 	//ajout de colone
 	cout << "ajout de colone" << endl;
@@ -23,8 +29,16 @@ int main(int argc, char *argv[])
 
 	//cout << "données aléatoires" << endl;
 	//on rentre les données
-	//machine.setWeightRandom();
-	machine.backupTraining("save1.ml");
+	
+	if(*argv[1]=='O')
+		machine.setWeightRandom();
+	else if(*argv[1]=='N')
+		machine.backupTraining("save1.ml");
+	else
+	{
+		cout << "Paramétre invalid(" << argv[1] << ") O ou N" << endl;
+		exit(0);
+	}
 
 	ifstream file("train-labels.idx1-ubyte",ios::binary);
 	ifstream images_train("train-images.idx3-ubyte",ios::binary);
