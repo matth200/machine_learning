@@ -114,7 +114,6 @@ int main(int argc, char *argv[])
 		machine.calcul();
 		machine.train(resultats,0.25);
 	}
-	//machine.saveTraining("save1.ml");
 	
 	cout << endl;
 	
@@ -180,6 +179,7 @@ int main(int argc, char *argv[])
 	       	if(a==numberCorrect)
 			cout << " <<<<";
 		cout << endl;	
-	}
+	}	
+	machine.saveTraining("save1.ml");
 	return 0;
 }

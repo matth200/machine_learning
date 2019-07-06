@@ -273,6 +273,8 @@ void MachineLearning::saveTraining(const char *file)
 	}
 	char end = 125;
 	f.write(&end,1);
+
+	cout << "SAVED SUCCESSFULLY" << endl;
 }
 
 void MachineLearning::backupTraining(const char *file)
