@@ -36,16 +36,20 @@ int main(int argc, char *argv[])
 	Gtk::VBox vbox;
 	Gtk::HBox hhbox;
 
-	Gtk::Label label1("Nombre");
-	label1.set_text(string("Nombre réel --> ")+to_string(number));
+	Gtk::Label label2("Nombre prédit --> X"), label1(string("Nombre réel --> ")+to_string(number));
 
 	Gtk::HButtonBox hbox;
-		
+	Gtk::VButtonBox boxResultat;	
+
 	Gtk::Button buttonNext("Next");
 	Gtk::Button buttonBefore("Before");
 
 	hhbox.pack_start(areaNumber);
-	hhbox.pack_start(label1);
+
+	boxResultat.pack_start(label1);
+	boxResultat.pack_start(label2);
+	
+	hhbox.pack_start(boxResultat);
 
 	vbox.pack_start(hhbox);
 

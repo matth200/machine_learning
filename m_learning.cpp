@@ -280,7 +280,65 @@ void MachineLearning::backupTraining(const char *file)
 	ifstream f(file,ios::binary);
 	if(f.is_open())
 	{
-		f.seekp(0,ios::beg);
+		f.seekg(0,ios::beg);
+		int cursor = 0;
 		
+		int nbrColumn = 0;		
+		f.read((char*)&nbrColumn,sizeof(nbrColumn));	
+		cursor+=sizeof(nbrColumn);
+		
+		bool error = 0;
+		
+		if(nbrColumn==getNumberColumn())
+		{
+			//si compatible
+			//on récupere les tailles des couches
+			vector<int> tailles;
+			for(int i(0);i<nbrColumn;i++)
+			{
+				f.seekg(cursor,ios::beg);
+				int taille = 0;
+				f.read((char*)&taille,sizeof(taille));
+				tailles.push_back(taille);
+				cursor+=sizeof(taille);
+				
+				if(taille!=Lines[i].get_number_neuron())
+				{
+					error = 1;
+					cout << "Erreur compatibilité" << endl;
+				}
+			}
+
+			//on récupere les données des poids et des biais
+			for(int l(0);l<nbrColumn-1 && !error;l++)
+			{
+				for(int j(0);j<Lines[l+1].get_number_neuron();j++)
+				{
+					for(int i(0);i<Lines[l].get_number_neuron();i++)
+					{
+						f.seekg(cursor,ios::beg);
+						double weight = 0;
+						f.read((char*)&weight,sizeof(weight));
+						cursor+=sizeof(weight);
+						Lines[l+1].get_neuron(j)->set_weight(i,weight);
+					}
+					f.seekg(cursor,ios::beg);
+					double biais = 0;
+					f.read((char*)&biais,sizeof(biais));
+					cursor+=sizeof(biais);
+					Lines[l+1].get_neuron(j)->set_bias(biais);
+				}
+			}
+			//petite vérification
+			char end = 0;
+			f.seekg(cursor,ios::beg);
+			f.read(&end,1);
+			if(end==125)
+				cout << "BACKUP SUCCESSFUL" << endl;
+			else
+				cout << "BACKUP FAILED" << endl;
+		}
+		else
+			cout << "Pas compatible" << endl;
 	}
 } 

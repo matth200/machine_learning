@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
 
 	//cout << "données aléatoires" << endl;
 	//on rentre les données
-	machine.setWeightRandom();
-	
+	//machine.setWeightRandom();
+	machine.backupTraining("save1.ml");
 
 	ifstream file("train-labels.idx1-ubyte",ios::binary);
 	ifstream images_train("train-images.idx3-ubyte",ios::binary);
@@ -114,8 +114,9 @@ int main(int argc, char *argv[])
 		machine.calcul();
 		machine.train(resultats,0.25);
 	}
+	//machine.saveTraining("save1.ml");
+	
 	cout << endl;
-
 	
 	//test2
 	accurency = 0;
