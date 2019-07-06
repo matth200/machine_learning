@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	Gtk::HBox hhbox;
 
 	Gtk::Label label1("Nombre");
-	label1.set_text(to_string(number));
+	label1.set_text(string("Nombre réel --> ")+to_string(number));
 
 	Gtk::HButtonBox hbox;
 		
@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
 
 void callNext(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l)
 {
-	string texte = "nombre réel --> ";
 	i++;
  	unsigned char data = 0;
 	f.seekg(8+i,ios::beg);
@@ -73,18 +72,20 @@ void callNext(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l)
 	number = int(data);	
 
 	n->nextNumber();
-	l.set_text(texte+to_string(number));
+	l.set_text(string("Nombre réel --> ")+to_string(number));
 }
 
 void callBefore(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l)
 {
- 	string texte = "nombre réel --> ";
-	i--;
- 	unsigned char data = 0;
-	f.seekg(8+i,ios::beg);
-	f.read((char*)&data,1);
-	number = int(data);	
-
-	n->beforeNumber();
-	l.set_text(texte+to_string(number));
+	if(i>0)
+	{
+		i--;
+ 		unsigned char data = 0;
+		f.seekg(8+i,ios::beg);
+		f.read((char*)&data,1);
+		number = int(data);	
+	
+		n->beforeNumber();
+		l.set_text(string("Nombre réel --> ")+to_string(number));
+	}
 }

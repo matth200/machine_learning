@@ -278,5 +278,9 @@ void MachineLearning::saveTraining(const char *file)
 void MachineLearning::backupTraining(const char *file)
 {
 	ifstream f(file,ios::binary);
-
+	if(f.is_open())
+	{
+		f.seekp(0,ios::beg);
+		
+	}
 } 
