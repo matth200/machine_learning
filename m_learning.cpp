@@ -110,7 +110,7 @@ MachineLearning::MachineLearning(int sizeInput)
 void MachineLearning::setInput(char *data)
 {
 	double value = 0;
-	for(int i(0);i<784;i++)
+	for(int i(0);i<Lines[0].get_number_neuron();i++)
 	{
 		value = (*((unsigned char*)(data+i)))/255.0;
 		Lines[0].get_neuron(i)->set_value(value);
@@ -162,9 +162,6 @@ double MachineLearning::getZ(int l, int j)
 
 double MachineLearning::getOutput(int index)
 {
-	//if(index==0)
-		//cout << "--------------------" << endl;	
-	//cout << "Error: " << Lines[Lines.size()-1].get_neuron(index)->get_error() << endl;
 	return Lines[Lines.size()-1].get_neuron(index)->get_value();
 }
 
@@ -197,6 +194,7 @@ double MachineLearning::getPrecision(NetworkNeuron& result)
 
 void MachineLearning::train(NetworkNeuron& result, double r)
 {
+	vector<double> errors;
 	//retropropagation des erreurs
 	for(int l(Lines.size()-1);l>0;l--)
 	{
@@ -217,9 +215,20 @@ void MachineLearning::train(NetworkNeuron& result, double r)
 				error = getOutput(j)-result.get_neuron(j)->get_value();
 			}
 			Neuron &neuron = *Lines[l].get_neuron(j);
-			neuron.set_error(error * sigmoidPrime(neuron.get_value()));			
+			neuron.set_error(error * sigmoidPrime(neuron.get_value()));
+			
+			//ajout des erreurs dans un tableau pour calculer la moyenne
+			errors.push_back(error * sigmoidPrime(neuron.get_value()));
 		}
 	}
+
+	double average = 0;
+	for(int i(0);i<errors.size();i++)
+	{
+		average += errors[i];
+	}
+	average/=double(errors.size());
+	//cout << "Moyenne des erreurs" << average << endl;
 	
 	//mise à jour des biais et des poids
 	for(int l(Lines.size()-1);l>0;l--)

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	machine.addColumn(20);
 	machine.addColumn(10);
 
-	machine.backupTraining("save1.ml");		
+	machine.backupTraining("save97.ml");		
 	
 	//ouverture de la fenetre avec les images
 	GetNumber areaNumber("train-images.idx3-ubyte");
@@ -95,7 +95,19 @@ void callNext(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l, Gtk
 	m.setInput(n->getData());
 	m.calcul();
 	
-	l2.set_text(string("Nombre prédit --> ")+to_string(m.getPrediction()));	
+	string texte = string("Nombre prédit --> ")+to_string(m.getPrediction())+" -  "+((number!=m.getPrediction())?to_string(m.getOutput(m.getPrediction())):string(""));	
+	if(number!=m.getPrediction())
+	{
+		texte+="\n";
+		for(int i(0);i<10;i++)
+		{
+			texte+=to_string(i);
+			texte+=": ";
+			texte+=to_string(m.getOutput(i));
+			texte+="\n";
+		}
+	}
+	l2.set_text(texte);	
 }
 
 void callBefore(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l, Gtk::Label &l2, MachineLearning &m)
@@ -115,6 +127,18 @@ void callBefore(GetNumber *n, int &i, ifstream &f, int &number, Gtk::Label &l, G
 		m.setInput(n->getData());
 		m.calcul();
 		
-		l2.set_text(string("Nombre prédit --> ")+to_string(m.getPrediction()));
+		string texte = string("Nombre prédit --> ")+to_string(m.getPrediction())+" -  "+((number!=m.getPrediction())?to_string(m.getOutput(m.getPrediction())):string(""));	
+		if(number!=m.getPrediction())
+		{
+			texte+="\n";
+			for(int i(0);i<10;i++)
+			{
+				texte+=to_string(i);
+				texte+=": ";
+				texte+=to_string(m.getOutput(i));
+				texte+="\n";
+			}
+		}
+		l2.set_text(texte);	
 	}
 }
