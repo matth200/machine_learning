@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
-		machine.train(resultats,0.5);
+		machine.train(resultats,.5);
 		//cout << "*";
 	}
 	cout << endl;

@@ -117,7 +117,7 @@ void MachineLearning::setInput(char *data)
 	}
 }
 
-void MachineLearning::setWeightRandom()
+void MachineLearning::setWeightRandom(int W, int B)
 {
 	srand(time(NULL));
 	for(int l(0);l<Lines.size()-1;l++)
@@ -126,9 +126,9 @@ void MachineLearning::setWeightRandom()
 		{
 			for(int i(0);i<Lines[l+1].get_neuron(j)->numberConnection();i++)
 			{
-				Lines[l+1].get_neuron(j)->set_weight(i,rand()%1000/100.0-5.0);  
+				Lines[l+1].get_neuron(j)->set_weight(i,(rand()%(W*100))/100.0-W/2.0);  
 			}
-			Lines[l+1].get_neuron(j)->set_bias(rand()%4000/100.0-20.0);
+			Lines[l+1].get_neuron(j)->set_bias((rand()%(B*100))/100.0-B/2.0);
 		}
 	}
 }

@@ -51,7 +51,7 @@ class MachineLearning
 public:
 	MachineLearning(int sizeInput);
 	void setInput(char *data);
-	void setWeightRandom();
+	void setWeightRandom(int W=2,int B=2);
        	void calcul();	
 	double getOutput(int index);
         int numberNeuronIn(int i);	
