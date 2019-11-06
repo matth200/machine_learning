@@ -299,8 +299,11 @@ void MachineLearning::backupTraining(const char *file)
 		cursor+=sizeof(nbrColumn);
 		
 		bool error = 0;
+
+		//init neuralNetwork
+		Lines.clear();
 		
-		if(nbrColumn==getNumberColumn())
+		if(getNumberColumn()==0||nbrColumn==getNumberColumn())
 		{
 			//si compatible
 			//on récupere les tailles des couches
@@ -313,6 +316,15 @@ void MachineLearning::backupTraining(const char *file)
 				tailles.push_back(taille);
 				cursor+=sizeof(taille);
 				
+				//add network
+				if(i>0)
+					addColumn(taille);
+				//first layer, input layer
+				else
+					Lines.push_back(NetworkNeuron(taille,0));
+		
+				cout << i << " = " << taille << endl;
+
 				if(taille!=Lines[i].get_number_neuron())
 				{
 					error = 1;
