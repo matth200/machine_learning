@@ -7,6 +7,8 @@
 #include <string.h>
 #include "m_learning.h"
 
+#define LEARNING_RATE 0.65
+
 using namespace std;
 int main(int argc, char *argv[])
 {
@@ -91,7 +93,7 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
-		machine.train(resultats,.5);
+		machine.train(resultats,LEARNING_RATE);
 		//cout << "*";
 	}
 	cout << endl;
