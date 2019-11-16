@@ -12,6 +12,8 @@
 using namespace std;
 int main(int argc, char *argv[])
 {
+	srand(time(0));
+
 	cout << "initialisation" << endl;
 	char data[784];
 	
