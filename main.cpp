@@ -7,7 +7,7 @@
 #include <string.h>
 #include "m_learning.h"
 
-#define LEARNING_RATE 0.65
+#define LEARNING_RATE 0.4
 
 using namespace std;
 int main(int argc, char *argv[])
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
 	
 	//train
-	for(int i(0);i<10000;i++)
+	for(int i(0);i<60000;i++)
 	{
 		images_train.seekg(16+i*784,ios::beg);
 		memset(data,0,784);
