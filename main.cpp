@@ -4,36 +4,66 @@
 #include <cstdlib>
 #include <ctime>
 
-#include <string.h>
-#include "m_learning.h"
+#include <chrono>
+#include <thread>
 
+#include <cmath>
+#include <cstring>
+
+#include <string.h>
+#include "src/m_learning.h"
+
+#define UPDATE_STATS_EVERY 1000
 #define LEARNING_RATE 0.4
+#define NUMBER_DATA 60000.0
 
 using namespace std;
+
+typedef chrono::high_resolution_clock::time_point time_point;
+
+
+string loading_text(int i, int size){
+	string texte = "[";
+	int index = int(i/100.0*size);
+	for(int i(0);i<size;i++){
+		if(i<index){
+			texte += '#';
+		}else{
+			texte += ' ';
+		}
+	}
+	texte+=']';
+	return texte;
+}
+
 int main(int argc, char *argv[])
 {
 	srand(time(0));
 
-	cout << "initialisation" << endl;
+	cout << "Initialisation" << endl;
 	char data[784];
 	
 	MachineLearning machine(784);
 	//ajout de colone
-	cout << "ajout de colone" << endl;
+	cout << "Ajout des colonnes aux réseaux de neuronnes" << endl;
 	machine.addColumn(16);
 	machine.addColumn(16);
 	machine.addColumn(10);
 
-	//cout << "données aléatoires" << endl;
+	cout << "Poids et biais définit par des valeurs aléatoires" << endl;
 	//on rentre les données
 	machine.setWeightRandom();
 	
 
-	ifstream file("train-labels.idx1-ubyte",ios::binary);
-	ifstream images_train("train-images.idx3-ubyte",ios::binary);
+	cout << "Chargement de la base de données" << endl;
+	ifstream file("database/train-labels.idx1-ubyte",ios::binary);
+	ifstream images_train("database/train-images.idx3-ubyte",ios::binary);
 	
 
 	//test1
+	cout << "Test 1" << endl;
+	time_point start_time = chrono::high_resolution_clock::now();
+
 	double accurency = 0;
 	int good = 0, bad = 0;
 	int numberCorrect = -1;
@@ -71,14 +101,19 @@ int main(int argc, char *argv[])
 		else
 			bad++;
 		accurency += machine.getPrecision(resultats);
+		double duration = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now()-start_time).count()/1000.0;
+		cout << "\r" << duration << "s, accuracy:" << accurency/(i+1) << " good:" << good << " bad:" << bad << " total:" << i+1 << flush; 
 	}
-	accurency/=100.0;
 
-	cout << "test1" << endl;
-	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
+	cout << endl;
 	
 	//train
-	for(int i(0);i<60000;i++)
+	start_time = chrono::high_resolution_clock::now();
+	cout << "Entrainement..." << endl;
+	accurency = 0.0;
+	good = 0;
+	bad = 0;
+	for(int i(0);i<NUMBER_DATA;i++)
 	{
 		images_train.seekg(16+i*784,ios::beg);
 		memset(data,0,784);
@@ -95,13 +130,46 @@ int main(int argc, char *argv[])
 		
 		machine.setInput(data);
 		machine.calcul();
+
+		double max = 0;
+		int indexMax = -1;
+		for(int a(0);a<10;a++)
+		{
+			double v = machine.getOutput(a);
+			//cout << " i:" << a << " ---> " << v << ((a!=numberCorrect)?"":"<<<<") << endl;
+			if(v>max)
+			{
+				max=v;
+				indexMax=a;
+			}
+		}
+		if(indexMax==numberC)
+			good++;
+		else
+			bad++;
+		accurency += machine.getPrecision(resultats);
+
+
 		machine.train(resultats,LEARNING_RATE);
-		//cout << "*";
+		
+		if(int(i/UPDATE_STATS_EVERY)!=int((i+1)/UPDATE_STATS_EVERY)){
+			//affichage stats
+			double duration = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now()-start_time).count()/1000.0;
+			int loading_level = int(i/NUMBER_DATA*100.0)+1;
+			cout << "\r" << int(duration) << "s, accuracy:" << accurency/UPDATE_STATS_EVERY << " accurate:" << double(good)/(good+bad)*100.0 << "%,  loaded " << loading_text(loading_level, 30) << " " << loading_level << "%        " << flush; 
+
+			//on initialise
+			accurency = 0.0;
+			good = 0;
+			bad = 0;
+		}
 	}
 	cout << endl;
 
 	
 	//test2
+	start_time = chrono::high_resolution_clock::now();
+	cout << "Test 2" << endl;
 	accurency = 0;
 	good = 0;
 	bad = 0;
@@ -139,11 +207,10 @@ int main(int argc, char *argv[])
 		else
 			bad++;
 		accurency += machine.getPrecision(resultats);
+		double duration = chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now()-start_time).count()/1000.0;
+		cout << "\r" << duration << "s, accuracy:" << accurency/(i+1) << " good:" << good << " bad:" << bad << " total:" << i+1 << flush; 
 	}
-	accurency/=100.0;
-
-	cout << "test2" << endl;
-	cout << "accurency: " << accurency << " good:" << good << " bad:" << bad << endl;
+	cout << endl;
 
 	return 0;
 }

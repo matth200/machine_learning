@@ -3,7 +3,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/box.h>
 
-#include "mynumber.h"
+#include "src/mynumber.h"
 
 using namespace std;
 
@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 	Gtk::Window fen;
 	
 	fen.set_default_size(600,600);
-	GetNumber areaNumber("train-images.idx3-ubyte");
+	GetNumber areaNumber("database/train-images.idx3-ubyte");
 
 	Gtk::VBox vbox;
 	Gtk::HBox hbox;
